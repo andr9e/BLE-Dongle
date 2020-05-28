@@ -1,0 +1,85 @@
+import  mysql.connector
+import time
+import os
+import subprocess
+import json
+import paho.mqtt.client as mqtt #import the Client
+#from MySQLdb import _mysql
+
+#connect to external database
+db=mysql.connector.connect(host="db-mdrdio-test.cei6tu7boufa.us-east-1.rds.amazonaws.com",port=3300,user="admin",passwd="hemlock2",db="modern_radio_sensors")
+if (db):
+	print ("connection was successfull")
+                #db.close()
+else:
+	print ("connection failed")
+cursor = db.cursor()
+sql ="""INSERT INTO environmentsensor (Temperature,Humidity) VALUES (7,9)"""
+cursor.execute(sql)
+db.commit()
+print (cursor.rowcount, "record inserted.")
+#cursor.close()
+#db.close()
+# start BLE console app
+subprocess.Popen(["/home/pi/bin/MdrdioBLEDongleConsole_linux-arm_020720_1742/start_BLE"])
+time.sleep(15) # wait 15 seconds for console Dongle Console app to load
+broker_address="localhost"
+#test_data_rx = False
+# The callback for when a client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+	print ("Connected with result code "+str (rc))
+	client.subscribe("dataTX") #subscribe the data strean topic upon connected
+
+# The callback for when a Published message is received from the server
+def on_message(client, userdata, msg,db):
+	
+	selectTagToPub(json.loads(msg.payload)["tagType"],client,msg.payload)
+
+def is_EnvironmentSensor(client,msg):
+	timestampUTC =  json.loads(msg)["timestampUTC"]
+	router_mac = json.loads(msg)["router_mac"]
+	router_lat=json.loads(msg)["router_lat"]
+	router_long=json.loads(msg)["router_long"]
+	rssi=json.loads(msg)["rssi"]
+	Temperature = json.loads(msg)["Temperature"]
+	Humidity = json.loads(msg)["Humidity"]
+	Lux = json.loads(msg)["VisibleLightPower"]
+	uvPower = json.loads(msg)["uvPower"]
+	pressure=json.loads(msg)["Pressure"]
+	deviceAddr=json.loads(msg)["deviceAddr"]
+	print ("test message")
+	cursor = db.cursor()
+	sql ="""INSERT INTO environmentsensor (timestampUTC,deviceAddr,router_lat,router_long,rssi,Temperature,Humidity) VALUES (timestampUTC,deviceAddr,router_lat,router_long,rssi,Temperature,Humidity)"""
+	cursor.execute(sql)
+	db.commit()
+	print (cursor.rowcount, "record inserted.")
+	#db.close() #close connection to database
+	
+	client.publish("EnvironmentSensor/Temperature",Temperature)
+	client.publish("EnvironmentSensor/Humidity",Humidity)
+	client.publish("EnvironmentSensor/VisibleLightPower",Lux)
+	print ("Published Enviornment Temperature Data:"+ Temperature)
+
+def is_SmartMoistureProbe(client, msg):
+	Index = json.loads(msg)["Index"]
+	client.publish("SmartMoistureProbe/Index", Index)
+
+def selectTagToPub(tagType,client,msg):
+	tagList[tagType](client,msg)
+
+client = mqtt.Client()
+
+tagList = {
+        "EnvironmentSensor": is_EnvironmentSensor,
+        "SmartMoistureProbe": is_SmartMoistureProbe
+}
+client.on_connect = on_connect
+client.on_message = on_message
+print ("connecting to broker")
+client.connect(broker_address) #connect to broker
+#while test_data_rx == False:
+#	client.publish("test/cmdPost","{\"testMessage\":\"This is a test\"}")
+print ("Publishing message to topic","console/cmd")
+postInterval_scanDuration="{\"postInterval\":\"180000\",\"scanDuration\":\"120000\"}"
+client.publish("console/cmd",postInterval_scanDuration)
+client.loop_forever()

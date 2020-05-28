@@ -7,7 +7,7 @@ import paho.mqtt.client as mqtt #import the mqtt Client
 
 # start BLE console app
 #subprocess.Popen(["/home/pi/bin/MdrdioBLEDongleConsole_linux-arm_020720_1742/start_sdk"])
-subprocess.Popen(["/home/pi/bin/start_dongle"])
+subprocess.Popen(["/home/pi/BLE-Dongle/start_dongle"])
 time.sleep(15) # wait 15 seconds for console Dongle Console app to load
 broker_address="localhost"
 
