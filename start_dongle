@@ -1,5 +1,5 @@
 #!/bin/bash
 
 echo Starting MdrdioBLEDongleConsole...
-dotnet /home/pi/bin/MdrdioBLEDongleConsole_linux-arm_020720_1742/MdrdioBLEDongleConsole.dll 
+dotnet /home/pi/BLE-Dongle/MdrdioBLEDongleConsole_linux-arm_020720_1742/MdrdioBLEDongleConsole.dll 
 echo all done!
