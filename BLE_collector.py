@@ -1,13 +1,13 @@
-#import mysql.connector
+
+import sqlite3
 import time
 import os
 import subprocess
 import json
 import paho.mqtt.client as mqtt #import the mqtt Client
 
-# start BLE console app
-#subprocess.Popen(["/home/pi/bin/MdrdioBLEDongleConsole_linux-arm_020720_1742/start_sdk"])
-subprocess.Popen(["/home/pi/BLE-Dongle/start_dongle"])
+conn = sqlite3.connect('bleSensor.db')
+subprocess.Popen(["/home/pi/BLE-Dongle/start_dongle"]) #start dongle console sdk app
 time.sleep(15) # wait 15 seconds for console Dongle Console app to load
 broker_address="localhost"
 
@@ -18,7 +18,7 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a Published message is received from the server
 def on_message(client, userdata, msg):
-	print ("inside on_message function")
+	print ("New message Received")
 	selectTagToPub(json.loads(msg.payload)["tagType"],client,msg.payload)
 
 def is_EnvironmentSensor(client,msg):
@@ -38,9 +38,6 @@ def is_EnvironmentSensor(client,msg):
 	router_deviceCount=int(json.loads(msg)["router_deviceCount"])
 	router_major=int(json.loads(msg)["router_major"])
 	router_minor=int(json.loads(msg)["router_minor"])
-	#version=int(json.loads(msg)["version"])
-	temp=Temperature
-	print (type(temp))
 	#db=mysql.connector.connect(host="db-mdrdio-test.cei6tu7boufa.us-east-1.rds.amazonaws.com",port=3300,user="admin",passwd="hemlock2",db="modern_radio_sensors")	
 	#if (db):
 	#       print ("connection was successfull")
@@ -77,6 +74,6 @@ client.on_message = on_message
 print ("connecting to broker")
 client.connect(broker_address) #connect to broker
 print ("Publishing message to topic","console/cmd")
-postInterval_scanDuration="{\"postInterval\":\"120000\",\"scanDuration\":\"120000\"}"
+postInterval_scanDuration="{\"postInterval\":\"240000\",\"scanDuration\":\"240000\"}"
 client.publish("console/cmd",postInterval_scanDuration)
 client.loop_forever()
