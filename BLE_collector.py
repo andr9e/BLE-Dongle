@@ -6,7 +6,6 @@ import subprocess
 import json
 import paho.mqtt.client as mqtt #import the mqtt Client
 
-conn = sqlite3.connect('bleSensor.db')
 subprocess.Popen(["/home/pi/BLE-Dongle/start_dongle"]) #start dongle console sdk app
 time.sleep(15) # wait 15 seconds for console Dongle Console app to load
 broker_address="localhost"
@@ -22,7 +21,7 @@ def on_message(client, userdata, msg):
 	selectTagToPub(json.loads(msg.payload)["tagType"],client,msg.payload)
 
 def is_EnvironmentSensor(client,msg):
-	print ("inside is_environmentSensor")
+	print (msg)
 	timestampUTC = str(json.loads(msg)["timestampUTC"])
 	router_mac =str(json.loads(msg)["router_mac"])
 	router_lat=float(json.loads(msg)["router_lat"])
@@ -38,6 +37,19 @@ def is_EnvironmentSensor(client,msg):
 	router_deviceCount=int(json.loads(msg)["router_deviceCount"])
 	router_major=int(json.loads(msg)["router_major"])
 	router_minor=int(json.loads(msg)["router_minor"])
+	
+	conn = sqlite3.connect('bleSensor.db')
+	c = conn.cursor()
+	c.execute("CREATE TABLE IF NOT EXISTS  environmentSensor (timestampUTC str, routerMac str,routerLat float,routerLong float,rssi int, temperature int,humidity int,"
+	"lux float,uvPower float,pressure float, deviceAddress str, MRAPFrameCount int, routerDeviceCount int, routerMajor int, routerMinor int)") #create table if does not exists
+	try:
+		c.execute("INSERT INTO environmentSensor (timestampUTC,routerMac,routerLat,routerLong,rssi,temperature,humidity,lux,uvPower,pressure,deviceAddress,"
+		"MRAPFrameCount,routerDeviceCount,routerMajor,routerMinor) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(timestampUTC, router_mac,router_lat,router_long,rssi,
+		Temperature,Humidity,Lux,uvPower,pressure,deviceAddr,MrapFrameCount,router_deviceCount,router_major,router_minor)) #Insert a row of data
+	except Error as e:
+		print(e)
+	conn.commit() #save the changes
+	conn.close() #close the connection to the db
 	#db=mysql.connector.connect(host="db-mdrdio-test.cei6tu7boufa.us-east-1.rds.amazonaws.com",port=3300,user="admin",passwd="hemlock2",db="modern_radio_sensors")	
 	#if (db):
 	#       print ("connection was successfull")
