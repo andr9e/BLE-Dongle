@@ -17,11 +17,10 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a Published message is received from the server
 def on_message(client, userdata, msg):
-	print ("New message Received")
+	print ("New message Received"+msg)
 	selectTagToPub(json.loads(msg.payload)["tagType"],client,msg.payload)
 
 def is_EnvironmentSensor(client,msg):
-	print (msg)
 	timestampUTC = str(json.loads(msg)["timestampUTC"])
 	router_mac =str(json.loads(msg)["router_mac"])
 	router_lat=float(json.loads(msg)["router_lat"])
@@ -38,7 +37,7 @@ def is_EnvironmentSensor(client,msg):
 	router_major=int(json.loads(msg)["router_major"])
 	router_minor=int(json.loads(msg)["router_minor"])
 	
-	conn = sqlite3.connect('bleSensor.db')
+	conn = sqlite3.connect('bleSensor.db') #create a connection to database
 	c = conn.cursor()
 	c.execute("CREATE TABLE IF NOT EXISTS  environmentSensor (timestampUTC str, routerMac str,routerLat float,routerLong float,rssi int, temperature int,humidity int,"
 	"lux float,uvPower float,pressure float, deviceAddress str, MRAPFrameCount int, routerDeviceCount int, routerMajor int, routerMinor int)") #create table if does not exists
@@ -50,23 +49,10 @@ def is_EnvironmentSensor(client,msg):
 		print(e)
 	conn.commit() #save the changes
 	conn.close() #close the connection to the db
-	#db=mysql.connector.connect(host="db-mdrdio-test.cei6tu7boufa.us-east-1.rds.amazonaws.com",port=3300,user="admin",passwd="hemlock2",db="modern_radio_sensors")	
-	#if (db):
-	#       print ("connection was successfull")
-                #db.close()
-	#else:
-	#       print ("connection failed")
-	#cursor = db.cursor()
-	#sql ""INSERT INTO environmentsensors (router_mac,rssi,Temperature,Humidity,deviceAddr,router_lat,router_long,VisibleLightPower,Pressure,MrapFrameCount,uvPower,router_deviceCount,router_major,router_minor,timestampUTC) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
-	#data=(router_mac,rssi,Temperature,Humidity,deviceAddr,router_lat,router_long,Lux,pressure,MrapFrameCount,uvPower,router_deviceCount,router_major,router_minor,timestampUTC)
-	#cursor.execute(sql,data)
-	#db.commit()
-	#print (cursor.rowcount, "record inserted.")
-	client.publish("EnvironmentSensor/Temperature",Temperature)
-	client.publish("EnvironmentSensor/Humidity",Humidity)
-	client.publish("EnvironmentSensor/VisibleLightPower",Lux)
-	print ("Published Enviornment Temperature Data:"+ Temperature)
-	#db.close()
+	#client.publish("EnvironmentSensor/Temperature",Temperature)
+	#client.publish("EnvironmentSensor/Humidity",Humidity)
+	#client.publish("EnvironmentSensor/VisibleLightPower",Lux)
+	#print ("Published Enviornment Temperature Data:"+ Temperature)
 
 def is_SmartMoistureProbe(client, msg):
 	Index = json.loads(msg)["Index"]
@@ -86,6 +72,6 @@ client.on_message = on_message
 print ("connecting to broker")
 client.connect(broker_address) #connect to broker
 print ("Publishing message to topic","console/cmd")
-postInterval_scanDuration="{\"postInterval\":\"240000\",\"scanDuration\":\"240000\"}"
-client.publish("console/cmd",postInterval_scanDuration)
+postInterval_scanDuration="{\"postInterval\":\"300000\",\"scanDuration\":\"300000\"}"
+client.publish("console/cmd",postInterval_scanDuration) #set post interval (scan for 5 minutes , post every 5 minutes
 client.loop_forever()
