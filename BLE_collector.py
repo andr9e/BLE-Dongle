@@ -56,43 +56,39 @@ def is_EnvironmentSensor(client,msg):
 
 def is_SmartMoistureProbe(client, msg):
 	print (msg)
-#	timestampUTC = str(json.loads(msg)["timestampUTC"])
-#	router_mac = str(json.loads(msg)["router_mac"])
-#	dev_type = int(json.loads(msg)["dev_type"])
-#	router_tl = str(json.loads(msg)["router_tl"])
-#	router_tlid = str(json.loads(msg)["router_tlid"])
-#	router_lat= float(json.loads(msg)["router_lat"])
-#	router_long= float(json.loads(msg)["router_long"])
-#	nodeAddr = str(json.loads(msg)["nodeAddr"])
-#	router_deviceCount=int(json.loads(msg)["router_deviceCount"])
-#	deviceAddr= str(json.loads(msg)["deviceAddr"])
-#	rssi=int(json.loads(msg)["rssi"])
-#	tagType = str(json.loads(msg)["tagType"])
-#	version = str(json.loads(msg)["version"])
-#	MrapFrameCount= int(json.loads(msg)["MrapFrameCount"])
-#	Index = int(json.loads(msg)["Index"])
-#	Temperature =int(json.loads(msg)["Temperature"])
-#	uvPower = float(json.loads(msg)["uvPower"])
-#	VisibleLightPower = float(json.loads(msg)["VisibleLightPower"])
-#	router_major=int(json.loads(msg)["router_major"])
-#	router_minor=int(json.loads(msg)["router_minor"])
+	timestampUTC = str(json.loads(msg)["timestampUTC"])
+	router_mac = str(json.loads(msg)["router_mac"])
+	dev_type = int(json.loads(msg)["dev_type"])
+	router_tl = str(json.loads(msg)["router_tl"])
+	router_tlid = str(json.loads(msg)["router_tlid"])
+	router_lat= float(json.loads(msg)["router_lat"])
+	router_long= float(json.loads(msg)["router_long"])
+	nodeAddr = str(json.loads(msg)["nodeAddr"])
+	router_deviceCount=int(json.loads(msg)["router_deviceCount"])
+	deviceAddr= str(json.loads(msg)["deviceAddr"])
+	rssi=int(json.loads(msg)["rssi"])
+	tagType = str(json.loads(msg)["tagType"])
+	version = str(json.loads(msg)["version"])
+	MrapFrameCount= int(json.loads(msg)["MrapFrameCount"])
+	moistureIndex = int(json.loads(msg)["Index"])
+	Temperature =int(json.loads(msg)["Temperature"])
+	uvPower = float(json.loads(msg)["uvPower"])
+	VisibleLightPower = float(json.loads(msg)["VisibleLightPower"])
+	router_major=int(json.loads(msg)["router_major"])
+	router_minor=int(json.loads(msg)["router_minor"])
 
-	try:
-		conn = sqlite3.connect('bleSensor.db') #create a connection to database
-		a = conn.cursor()
-		a.execute("CREATE TABLE smartMoistureProbe (timestampUTC str,routerMac str,devType int,routerTl str,routerTLId str,routerLat float,"
-		"routerLong float,nodeAddr str,routerDeviceCount int,deviceAddress str,rssi int,tagType str,version str,MRAPFrameCount int,index int,"
-		"temperature int,uvPower float,visibleLightPower float,routerMajor int,routerMinor int)") #create table if does not exists
-	except OSError as err:
-		print ("Error: {0}".format(err))
-	try:
-		a.execute("INSERT INTO smartMoistureProbe (timestampUTC,routerMac,devType,routerTL,routerTLId,routerLat,routerLong,nodeAddr,routerDeviceCount,"
-		"deviceAddress,rssi,tagType,version,MRAPFrameCount,index,temperature,uvPower,visibleLightPower,"
-		"routerMajor,routerMinor) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(timestampUTC,router_mac,dev_type,router_tl,router_tlid,
-		router_lat,router_long,nodeAddr,router_deviceCount,deviceAddr,rssi,tagType,version,MrapFrameCount,Index,Temperature,
-		uvPower,VisibleLightPower,router_major,router_minor)) #Insert a row of data
-	except Error as e:
-		print (e)
+	conn = sqlite3.connect('bleSensor.db') #create a connection to database
+	a = conn.cursor()
+	a.execute("CREATE TABLE IF NOT EXISTS smartMoistureProbe (timestampUTC str,routerMac str, devType int,routerTL str,routerTLid str,"
+	"routerLat float, routerLong float, nodeAddr str, routerDeviceCount int, deviceAddress str, rssi int, tagType str, version str,"
+	"MRAPFrameCount int, moistureIndex int, temperature int, uvPower float, visibleLightPower float, routerMajor int, routerMinor int)")
+
+	a.execute("INSERT INTO smartMoistureProbe (timestampUTC,routerMac,devType,routerTL,routerTLid,routerLat,routerLong,nodeAddr,routerDeviceCount,"
+	"deviceAddress,rssi,tagType,version,MRAPFrameCount,moistureIndex,temperature,uvPower,visibleLightPower,"
+	"routerMajor,routerMinor) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",(timestampUTC,router_mac,dev_type,router_tl,router_tlid,
+	router_lat,router_long,nodeAddr,router_deviceCount,deviceAddr,rssi,tagType,version,MrapFrameCount,moistureIndex,Temperature,
+	uvPower,VisibleLightPower,router_major,router_minor)) #Insert a row of data
+
 	conn.commit() #save the changes
 	conn.close() #close the connection to the db
 	#client.publish("SmartMoistureProbe/Index", Index)
