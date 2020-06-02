@@ -17,7 +17,7 @@ def on_connect(client, userdata, flags, rc):
 
 # The callback for when a Published message is received from the server
 def on_message(client, userdata, msg):
-	selectTagToPub(json.loads(msg.payload)["tagType"],client,msg.payload)
+	selectTag(json.loads(msg.payload)["tagType"],client,msg.payload)
 
 def is_EnvironmentSensor(client,msg):
 	print (msg)
@@ -93,7 +93,7 @@ def is_SmartMoistureProbe(client, msg):
 	conn.close() #close the connection to the db
 	#client.publish("SmartMoistureProbe/Index", Index)
 
-def selectTagToPub(tagType,client,msg):
+def selectTag(tagType,client,msg):
 	tagList[tagType](client,msg)
 
 client = mqtt.Client()
@@ -107,7 +107,7 @@ client.on_message = on_message
 print ("connecting to broker")
 client.connect(broker_address) #connect to broker
 print ("Publishing message to topic","console/cmd")
-#postInterval_scanDuration="{\"postInterval\":\"300000\",\"scanDuration\":\"300000\"}"
-postInterval_scanDuration="{\"postInterval\":\"60000\",\"scanDuration\":\"60000\"}"
+postInterval_scanDuration="{\"postInterval\":\"300000\",\"scanDuration\":\"300000\"}"
+#postInterval_scanDuration="{\"postInterval\":\"60000\",\"scanDuration\":\"60000\"}"
 client.publish("console/cmd",postInterval_scanDuration) #set post interval (scan for 5 minutes , post every 5 minutes
 client.loop_forever()
