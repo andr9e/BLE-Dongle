@@ -4,7 +4,7 @@ db = SqliteDatabase('bletag.db')
 
 class environmentSensor (Model):
 	timestampUTC = TextField()
-	routerMac = TextField()
+	routerMac = CharField()
 	routerLat = FloatField()
 	routerLong =FloatField()
 	rssi = IntegerField()
@@ -22,6 +22,24 @@ class environmentSensor (Model):
 	class Meta:
 		database = db # This model uses the "ble.db" database.
 
+class testClass (Model):
+	name = TextField()
+	temp = IntegerField()
+	
+	class Meta:
+		database = db
+
+class testClassData (object):
+	def __init__(self):
+		db.connect()
+		db.create_tables([testClass], safe = True)
+
+	def define_sensor (self,name, temp):
+		testClass.get_or_create(name= name,temp=temp)
+
+	def close (self):
+		db.close()
+
 class environmentSensorData (object):
 	
 	def __init__(self):
@@ -31,11 +49,11 @@ class environmentSensorData (object):
 	def define_sensor (self,timestampUTC, routerMac, routerLat, routerLong, rssi,temperature, 
 	humidity, visibleLightPower, uvPower, pressure, deviceAddress,MRAPFrameCount, 
 	routerDeviceCount, routerMajor, routerMinor):
-		environmentSensor.create(timestampUTC=timestampUTC, router_mac=routerMac,
-		router_lat=routerLat,router_long=routerLong, rssi=rssi,Temperature=temperature,
-		Humidity=humidity,Lux=visibleLightpower, uvPower=uvPower, pressure=pressure, 
-		deviceAddr=deviceAddress,MrapFrameCount=MRAPFrameCount,router_deviceCount=routerDeviceCount,
-		router_major=routerMajor, router_minor=routerMinor)
+		environmentSensor.create(timestampUTC=timestampUTC, routerMac = routerMac,
+		routerLat=routerLat,routerLong=routerLong, rssi=rssi,temperature=temperature,
+		humidity=humidity,visibleLightPower=visibleLightPower, uvPower=uvPower, pressure=pressure, 
+		deviceAddress=deviceAddress,MRAPFrameCount=MRAPFrameCount,routerDeviceCount=routerDeviceCount,
+		routerMajor=routerMajor, routerMinor=routerMinor)
 	
 	def close (self):
 		db.close()
