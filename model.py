@@ -20,25 +20,7 @@ class environmentSensor (Model):
 	routerMinor = IntegerField()
 
 	class Meta:
-		database = db # This model uses the "ble.db" database.
-
-class testClass (Model):
-	name = TextField()
-	temp = IntegerField()
-	
-	class Meta:
-		database = db
-
-class testClassData (object):
-	def __init__(self):
-		db.connect()
-		db.create_tables([testClass], safe = True)
-
-	def define_sensor (self,name, temp):
-		testClass.get_or_create(name= name,temp=temp)
-
-	def close (self):
-		db.close()
+		database = db # This model uses the "bletag.db" database.
 
 class environmentSensorData (object):
 	
@@ -57,4 +39,25 @@ class environmentSensorData (object):
 	
 	def close (self):
 		db.close()
+
+class smartMoistureProbe (Model):
+	timestampUTC = TextField()
+	routerMac = TextField()
+class testClass (Model):
+        name = TextField()
+        temp = IntegerField()
+        
+        class Meta:
+                database = db
+
+class testClassData (object):
+        def __init__(self):
+                db.connect()
+                db.create_tables([testClass], safe = True)
+
+        def define_sensor (self,name, temp):
+                testClass.get_or_create(name= name,temp=temp)
+
+        def close (self):
+                db.close()
 
