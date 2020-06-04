@@ -1,4 +1,5 @@
 from peewee import *
+import json
 
 db = SqliteDatabase('bletag.db')
 
@@ -28,15 +29,32 @@ class environmentSensorData (object):
 		db.connect()
 		db.create_tables([environmentSensor],safe = True)
 
-	def define_sensor (self,timestampUTC, routerMac, routerLat, routerLong, rssi,temperature,
-	humidity, visibleLightPower, uvPower, pressure, deviceAddress,MRAPFrameCount,
-	routerDeviceCount, routerMajor, routerMinor):
+	#def define_sensor (self,timestampUTC, routerMac, routerLat, routerLong, rssi,temperature,
+	#humidity, visibleLightPower, uvPower, pressure, deviceAddress,MRAPFrameCount,
+	#routerDeviceCount, routerMajor, routerMinor):
+	def define_sensor (self,msg):
+		timestampUTC = str(json.loads(msg)["timestampUTC"])
+		routerMac =str(json.loads(msg)["router_mac"])
+		routerLat=float(json.loads(msg)["router_lat"])
+		routerLong=float(json.loads(msg)["router_long"])
+		rssi=int(json.loads(msg)["rssi"])
+		temperature =int(json.loads(msg)["Temperature"])
+		humidity =int(json.loads(msg)["Humidity"])
+		visibleLightPower = float(json.loads(msg)["VisibleLightPower"])
+		uvPower = float(json.loads(msg)["uvPower"])
+		pressure=float(json.loads(msg)["Pressure"])
+		deviceAddress=str(json.loads(msg)["deviceAddr"])
+		MRAPFrameCount= int(json.loads(msg)["MrapFrameCount"])
+		routerDeviceCount=int(json.loads(msg)["router_deviceCount"])
+		routerMajor=int(json.loads(msg)["router_major"])
+		routerMinor=int(json.loads(msg)["router_minor"])
 
 		environmentSensor.get_or_create(timestampUTC=timestampUTC, routerMac = routerMac,
 		routerLat=routerLat,routerLong=routerLong, rssi=rssi,temperature=temperature,
 		humidity=humidity,visibleLightPower=visibleLightPower, uvPower=uvPower, pressure=pressure,
 		deviceAddress=deviceAddress,MRAPFrameCount=MRAPFrameCount,routerDeviceCount=routerDeviceCount,
 		routerMajor=routerMajor, routerMinor=routerMinor)
+
 
 	def close (self):
 		db.close()
