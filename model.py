@@ -29,9 +29,6 @@ class environmentSensorData (object):
 		db.connect()
 		db.create_tables([environmentSensor],safe = True)
 
-	#def define_sensor (self,timestampUTC, routerMac, routerLat, routerLong, rssi,temperature,
-	#humidity, visibleLightPower, uvPower, pressure, deviceAddress,MRAPFrameCount,
-	#routerDeviceCount, routerMajor, routerMinor):
 	def define_sensor (self,msg):
 		timestampUTC = str(json.loads(msg)["timestampUTC"])
 		routerMac =str(json.loads(msg)["router_mac"])
@@ -89,9 +86,27 @@ class smartMoistureProbeData (object):
 		db.connect()
 		db.create_tables([smartMoistureProbe],safe = True)
 
-	def define_sensor (self,timestampUTC,routerMac,devType,routerTL,routerTLid,
-	routerLat,routerLong,nodeAddress,routerDeviceCount,deviceAddress,rssi,tagType,version,
-	MRAPFrameCount,moistureIndex,temperature,uvPower,visibleLightPower,routerMajor,routerMinor):
+	def define_sensor (self,msg):
+		timestampUTC = str(json.loads(msg)["timestampUTC"])
+		routerMac = str(json.loads(msg)["router_mac"])
+		devType = int(json.loads(msg)["dev_type"])
+		routerTL = str(json.loads(msg)["router_tl"])
+		routerTLid = str(json.loads(msg)["router_tlid"])
+		routerLat= float(json.loads(msg)["router_lat"])
+		routerLong= float(json.loads(msg)["router_long"])
+		nodeAddress = str(json.loads(msg)["nodeAddr"])
+		routerDeviceCount=int(json.loads(msg)["router_deviceCount"])
+		deviceAddress= str(json.loads(msg)["deviceAddr"])
+		rssi=int(json.loads(msg)["rssi"])
+		tagType = str(json.loads(msg)["tagType"])
+		version = str(json.loads(msg)["version"])
+		MRAPFrameCount= int(json.loads(msg)["MrapFrameCount"])
+		moistureIndex = int(json.loads(msg)["Index"])
+		temperature =int(json.loads(msg)["Temperature"])
+		uvPower = float(json.loads(msg)["uvPower"])
+		visibleLightPower = float(json.loads(msg)["VisibleLightPower"])
+		routerMajor=int(json.loads(msg)["router_major"])
+		routerMinor=int(json.loads(msg)["router_minor"])
 
 		smartMoistureProbe.get_or_create(timestampUTC=timestampUTC,routerMac=routerMac, devType=devType,
 		routerTL=routerTL,routerTLid=routerTLid,routerLat=routerLat,routerLong=routerLong,
@@ -102,21 +117,3 @@ class smartMoistureProbeData (object):
 
 	def close (self):
 		db.close()
-
-class testClass (Model):
-        name = TextField()
-        temp = IntegerField()
-
-        class Meta:
-                database = db
-
-class testClassData (object):
-        def __init__(self):
-                db.connect()
-                db.create_tables([testClass], safe = True)
-
-        def define_sensor (self,name, temp):
-                testClass.get_or_create(name= name,temp=temp)
-
-        def close (self):
-                db.close()
