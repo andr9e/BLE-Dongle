@@ -1,0 +1,19 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+  <div class="jumbotron">
+    <div class="container">
+          <h1>Raspberry Pi Modern Radio Sensors</h1>
+          <p>Tracking sensors!</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5">
+            <h2>DHT Sensor</h2>
+            <canvas id='dht_chart' width='400' height='400'></canvas>
+          </div>
+        </div>
+      </div>
+{% endblock %}

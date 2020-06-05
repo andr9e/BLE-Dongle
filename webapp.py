@@ -8,6 +8,7 @@ app = Flask(__name__)
 # set optional bootswatch theme
 #app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 app.config['SECRET_KEY'] = 'mosfet'
+app.config['MODEL'] = model.environmentSensorData()
 
 admin = Admin(app, name='SqliteDatabase', template_mode='bootstrap3', url='/')
 admin.add_view(ModelView(model.environmentSensor))
