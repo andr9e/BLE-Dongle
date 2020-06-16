@@ -1,27 +1,49 @@
 from peewee import *
 import json
 
-db = SqliteDatabase('bletag.db')
+db = SqliteDatabase('tag.db')
 
-class environmentSensor (Model):
+class BaseModel (Model):
+	class Meta:
+		database = db
+
+class Room (BaseModel):
+	room = CharField()
+	create_date = DateTimeField()
+
+class KnownTag (BaseModel):
+	room = ForeignKeyField(Room, backref='knowntags')
+	alias = CharField()
+	type = CharField()
+	id = CharField()	# device MAC ID
+	create_date = DateTimeField()
+
+class BleTag (BaseModel):
 	timestampUTC = TextField()
 	routerMac = CharField()
+	devType = IntegerField()
+	routerTL = CharField()
+	routerTLid=CharField()
 	routerLat = FloatField()
 	routerLong =FloatField()
 	rssi = IntegerField()
+	nodeAddress = CharField()
+	routerDeviceCount = IntegerField()
+	deviceAddress=CharField()
+	tagType=CharField()
+	version = TextField()
+	MRAPFrameCount=IntegerField()
+	routerMajor=IntegerField()
+	routerMinor=IntegerField()
+
+
+class environmentSensor (BleTag):
 	temperature = IntegerField()
 	humidity = IntegerField()
 	visibleLightPower = FloatField()
 	uvPower = FloatField()
 	pressure = FloatField()
-	deviceAddress = TextField()
-	MRAPFrameCount = IntegerField()
-	routerDeviceCount = IntegerField()
-	routerMajor = IntegerField()
-	routerMinor = IntegerField()
 
-	class Meta:
-		database = db # This model uses the "bletag.db" database.
 
 class environmentSensorData (object):
 
@@ -56,30 +78,11 @@ class environmentSensorData (object):
 	def close (self):
 		db.close()
 
-class smartMoistureProbe (Model):
-	timestampUTC = TextField()
-	routerMac = TextField()
-	devType = IntegerField()
-	routerTL = TextField()
-	routerTLid=TextField()
-	routerLat= FloatField()
-	routerLong=FloatField()
-	nodeAddress = TextField()
-	routerDeviceCount = IntegerField()
-	deviceAddress=TextField()
-	rssi = IntegerField()
-	tagType=TextField()
-	version = TextField()
-	MRAPFrameCount=IntegerField()
+class smartMoistureProbe (BleTag):
 	moistureIndex=IntegerField()
 	temperature= IntegerField()
 	uvPower=FloatField()
 	visibleLightPower=FloatField()
-	routerMajor=IntegerField()
-	routerMinor=IntegerField()
-
-	class Meta:
-		database = db # This model uses the "bletag.db" database.
 
 class smartMoistureProbeData (object):
 	def __init__(self):
