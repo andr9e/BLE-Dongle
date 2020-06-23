@@ -8,14 +8,14 @@ class BaseModel (Model):
 		database = db
 
 class Room (BaseModel):
-	room = CharField()
+	name = CharField()
 	create_date = DateTimeField()
 
 class KnownTag (BaseModel):
 	room = ForeignKeyField(Room, backref='knowntags')
-	alias = CharField()
-	type = CharField()
-	id = CharField()	# device MAC ID
+	tag_name = CharField()
+	tag_type = CharField()
+	tag_id = CharField()	# device MAC ID
 	create_date = DateTimeField()
 
 class BleTag (BaseModel):
@@ -68,11 +68,12 @@ class environmentSensorData (object):
 		routerMajor=int(json.loads(msg)["router_major"])
 		routerMinor=int(json.loads(msg)["router_minor"])
 
-		environmentSensor.get_or_create(timestampUTC=timestampUTC, routerMac = routerMac,
-		routerLat=routerLat,routerLong=routerLong, rssi=rssi,temperature=temperature,
-		humidity=humidity,visibleLightPower=visibleLightPower, uvPower=uvPower, pressure=pressure,
-		deviceAddress=deviceAddress,MRAPFrameCount=MRAPFrameCount,routerDeviceCount=routerDeviceCount,
-		routerMajor=routerMajor, routerMinor=routerMinor)
+		environmentSensor.get_or_create(timestampUTC=timestampUTC, routerMac = routerMac,devType=devType,
+		routerTL=routerTL,routerTLid=routerTLid,routerLat=routerLat,routerLong=routerLong,
+		nodeAddress=nodeAddress,routerDeviceCount=routerDeviceCount,deviceAddress=deviceAddress,
+		rssi=rssi,tagType=tagType,version=version,MRAPFrameCount=MRAPFrameCount,routerMajor=routerMajor,
+		routerMinor=routerMinor,temperature=temperature,humidity=humidity,visibleLightPower=visibleLightPower,
+		uvPower=uvPower, pressure=pressure)
 
 
 	def close (self):

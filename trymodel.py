@@ -49,9 +49,9 @@ smartmoitureprobe_Data_msg = {
 }
 
 
-#msg =json.dumps(environmentsensor_data_msg)
-msg =json.dumps(smartmoitureprobe_Data_msg)
-#data = model.environmentSensorData()
-data= model.smartMoistureProbeData()
+msg =json.dumps(environmentsensor_data_msg)
+#msg =json.dumps(smartmoitureprobe_Data_msg)
+data = model.environmentSensorData()
+#data= model.smartMoistureProbeData()
 data.define_sensor(msg)
 data.close()
