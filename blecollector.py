@@ -21,15 +21,11 @@ def on_message(client, userdata, msg):
 
 def is_environmentsensor(client,msg):
 	print (msg)
-	data = model.environmentSensorData()
-	data.define_sensor(msg)
-	data.close()
+	table_data = model.environmentSensorData(msg) #add sensor data to table
 
 def is_smartmoistureprobe(client, msg):
 	print (msg)
-	data = model.smartMoistureProbeData()
-	data.define_sensor(msg)
-	data.close()
+	table_data = model.smartMoistureProbeData(msg) #add sensor data to table
 
 def select_tag(tagType,client,msg):
 	tagList[tagType](client,msg)
@@ -45,7 +41,7 @@ client.on_message = on_message
 print ("connecting to broker")
 client.connect(broker_address) #connect to broker
 print ("Publishing message to topic","console/cmd")
-#postInterval_scanDuration="{\"postInterval\":\"300000\",\"scanDuration\":\"300000\"}"
-postInterval_scanDuration="{\"postInterval\":\"60000\",\"scanDuration\":\"60000\"}"
+postInterval_scanDuration="{\"postInterval\":\"300000\",\"scanDuration\":\"300000\"}"
+#postInterval_scanDuration="{\"postInterval\":\"60000\",\"scanDuration\":\"60000\"}"
 client.publish("console/cmd",postInterval_scanDuration) #set post interval (scan for 5 minutes , post every 5 minutes
 client.loop_forever()

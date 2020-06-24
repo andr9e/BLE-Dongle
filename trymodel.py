@@ -9,20 +9,20 @@ environmentsensor_data_msg = {
     "router_tlid":"",
     "router_lat":"28.5831322",
     "router_long":"-81.2936732",
-    "nodeAddr":"90E202CDB165",
-    "router_deviceCount":"2","deviceAddr":
-    "90E202CD4492",
-    "rssi":"-70",
+	"nodeAddr":"90E202CDB165",
+    "router_deviceCount":"2",
+	"deviceAddr":"90E202CD4492",
+	"rssi":"-70",
     "tagType":"EnvironmentSensor",
     "version":"Firmware: 1, Hardware: 0",
     "MrapFrameCount":"7342",
+	"router_major":"1",
+    "router_minor":"2",
+	"Temperature":"25",
     "Humidity":"64",
-    "Temperature":"25",
+	"VisibleLightPower":"15475.2",
     "uvPower":"0",
-    "VisibleLightPower":"15475.2",
     "Pressure":"101.9438",
-    "router_major":"1",
-    "router_minor":"2"
 }
 
 smartmoitureprobe_Data_msg = {
@@ -50,8 +50,8 @@ smartmoitureprobe_Data_msg = {
 
 
 msg =json.dumps(environmentsensor_data_msg)
-#msg =json.dumps(smartmoitureprobe_Data_msg)
-data = model.environmentSensorData()
-#data= model.smartMoistureProbeData()
-data.define_sensor(msg)
-data.close()
+msg1 =json.dumps(smartmoitureprobe_Data_msg)
+data = model.environmentSensorData(msg)
+data1= model.smartMoistureProbeData(msg1)
+#data.define_sensor(msg)
+#data.close()
