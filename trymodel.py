@@ -48,10 +48,13 @@ smartmoitureprobe_Data_msg = {
 "router_minor":"2"
 }
 
+room= model.RoomData()
+#room.create_room("backroom")
+room.delete_room("office")
 
-msg =json.dumps(environmentsensor_data_msg)
-msg1 =json.dumps(smartmoitureprobe_Data_msg)
-data = model.environmentSensorData(msg)
-data1= model.smartMoistureProbeData(msg1)
+#msg =json.dumps(environmentsensor_data_msg)
+#msg1 =json.dumps(smartmoitureprobe_Data_msg)
+#data = model.environmentSensorData(msg)
+#data1= model.smartMoistureProbeData(msg1)
 #data.define_sensor(msg)
 #data.close()

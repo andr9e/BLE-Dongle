@@ -1,5 +1,6 @@
 from peewee import *
 import json
+import datetime
 
 db = SqliteDatabase('tag.db')
 
@@ -8,8 +9,22 @@ class BaseModel (Model):
 		database = db
 
 class Room (BaseModel):
-	name = CharField()
+	name = CharField(unique=True)
 	create_date = DateTimeField()
+
+class RoomData():
+
+	def create_room(self,room):
+		db.connect()
+		db.create_tables([Room],safe = True)
+		Room.get_or_create(name=room,create_date=datetime.datetime.now())
+		db.close()
+
+	def delete_room(self,name):
+		db.connect()
+		delete_room=Room.delete().where(Room.name == name)
+		delete_room.execute()
+
 
 class KnownTag (BaseModel):
 	room = ForeignKeyField(Room, backref='knowntags')
@@ -73,7 +88,7 @@ class environmentSensorData ():
 
 
 		environmentSensor.get_or_create(
-		timestampUTC=timestampUTC, 
+		timestampUTC=timestampUTC,
 		routerMac = routerMac,
 		devType=devType,
 		routerTL=routerTL,
@@ -92,7 +107,7 @@ class environmentSensorData ():
 		temperature=temperature,
 		humidity=humidity,
 		visibleLightPower=visibleLightPower,
-		uvPower=uvPower, 
+		uvPower=uvPower,
 		pressure=pressure)
 
 		db.close() #close database connection
@@ -147,7 +162,7 @@ class smartMoistureProbeData ():
 
 		smartMoistureProbe.get_or_create(
 		timestampUTC=timestampUTC,
-		routerMac=routerMac, 
+		routerMac=routerMac,
 		devType=devType,
 		routerTL=routerTL,
 		routerTLid=routerTLid,
