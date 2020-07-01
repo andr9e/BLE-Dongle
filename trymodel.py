@@ -48,9 +48,12 @@ smartmoitureprobe_Data_msg = {
 "router_minor":"2"
 }
 
-room= model.RoomData()
+#room= model.RoomData()
+know_tag=model.KnownTagData()
+know_tag.define_tag('backroom',"myTag","environmentSensor","abc123abc")
 #room.create_room("backroom")
-room.delete_room("office")
+#room.delete_room("office")
+#print (room.room_count())
 
 #msg =json.dumps(environmentsensor_data_msg)
 #msg1 =json.dumps(smartmoitureprobe_Data_msg)

@@ -24,6 +24,12 @@ class RoomData():
 		db.connect()
 		delete_room=Room.delete().where(Room.name == name)
 		delete_room.execute()
+		db.close()
+
+	def room_count(self):
+		db.connect()
+		return Room.select().count()
+		db.close()
 
 
 class KnownTag (BaseModel):
@@ -32,6 +38,15 @@ class KnownTag (BaseModel):
 	tag_type = CharField()
 	tag_id = CharField()	# device MAC ID
 	create_date = DateTimeField()
+
+class KnownTagData():
+	def define_tag(self,room_name,tag_name,tag_type,tag_id):
+		db.connect()
+		db.create_tables([KnownTag],safe = True)
+		KnownTag.get_or_create (room = Room.get(Room.name == room_name),
+		tag_name=tag_name,tag_type=tag_type,tag_id=tag_id,create_date=datetime.datetime.now())
+		db.close()
+
 
 
 class environmentSensor (BaseModel):
