@@ -49,16 +49,14 @@ smartmoitureprobe_Data_msg = {
 }
 
 #room= model.RoomData()
-known_tag=model.KnownTagData()
+#known_tag=model.KnownTagData()
 #known_tag.get_tag()
-known_tag.define_tag("office","myTag","environmentSensor","123abcdf123")
+#known_tag.define_tag("office","myTag","environmentSensor","123abcdf123")
 #room.create_room("kitchen")
 #room.delete_room("office")
 #print (room.room_count())
 
-#msg =json.dumps(environmentsensor_data_msg)
+msg =json.dumps(environmentsensor_data_msg)
 #msg1 =json.dumps(smartmoitureprobe_Data_msg)
-#data = model.environmentSensorData(msg)
+data = model.TagData(msg)
 #data1= model.smartMoistureProbeData(msg1)
-#data.define_sensor(msg)
-#data.close()
