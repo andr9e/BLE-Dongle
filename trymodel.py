@@ -49,9 +49,10 @@ smartmoitureprobe_Data_msg = {
 }
 
 #room= model.RoomData()
-know_tag=model.KnownTagData()
-know_tag.define_tag('backroom',"myTag","environmentSensor","abc123abc")
-#room.create_room("backroom")
+known_tag=model.KnownTagData()
+#known_tag.get_tag()
+known_tag.define_tag("office","myTag","environmentSensor","123abcdf123")
+#room.create_room("kitchen")
 #room.delete_room("office")
 #print (room.room_count())
 

@@ -9,7 +9,7 @@ class BaseModel (Model):
 		database = db
 
 class Room (BaseModel):
-	name = CharField(unique=True)
+	name = CharField(primary_key=True)
 	create_date = DateTimeField()
 
 class RoomData():
@@ -33,18 +33,26 @@ class RoomData():
 
 
 class KnownTag (BaseModel):
-	room = ForeignKeyField(Room, backref='knowntags')
+	room = ForeignKeyField(Room)
 	tag_name = CharField()
 	tag_type = CharField()
-	tag_id = CharField()	# device MAC ID
+	tag_id = CharField(primary_key=True)	# device MAC ID
 	create_date = DateTimeField()
 
 class KnownTagData():
-	def define_tag(self,room_name,tag_name,tag_type,tag_id):
+	def define_tag(self,tag_room,tag_name,tag_type,tag_id):
 		db.connect()
 		db.create_tables([KnownTag],safe = True)
-		KnownTag.get_or_create (room = Room.get(Room.name == room_name),
-		tag_name=tag_name,tag_type=tag_type,tag_id=tag_id,create_date=datetime.datetime.now())
+		KnownTag.get_or_create (room = Room.get(Room.name == tag_room),
+		tag_name=tag_name,tag_type=tag_type,tag_id=tag_id,
+		create_date=datetime.datetime.now())
+		db.close()
+
+	def get_tag(self):
+		db.connect()
+		for known_tag in KnownTag.select():
+			print (known_tag.room.name)
+
 		db.close()
 
 
