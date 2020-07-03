@@ -1,8 +1,9 @@
 from peewee import *
+from playhouse.sqlite_ext import *
 import json
 import datetime
 
-db = SqliteDatabase('tag.db')
+db = SqliteExtDatabase('tag.db')
 
 class BaseModel (Model):
 	class Meta:
@@ -72,7 +73,7 @@ class Tag(BaseModel):
 	MRAPFrameCount=IntegerField()
 	routerMajor=IntegerField()
 	routerMinor=IntegerField()
-	data = JsonField()
+	data = JSONField()
 
 class TagData():
 	def __init__(self,msg):
