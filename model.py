@@ -57,68 +57,77 @@ class KnownTagData():
 		db.close()
 
 class Tag(BaseModel):
-	timestampUTC = TextField()
-	routerMac = CharField()
-	devType = IntegerField()
-	routerTL = CharField()
-	routerTLid=CharField()
-	routerLat = FloatField()
-	routerLong =FloatField()
-	rssi = IntegerField()
-	nodeAddress = CharField()
-	routerDeviceCount = IntegerField()
-	deviceAddress=CharField()
-	tagType=CharField()
-	version = TextField()
-	MRAPFrameCount=IntegerField()
-	routerMajor=IntegerField()
-	routerMinor=IntegerField()
-	data = JSONField()
+	#timestampUTC = TextField()
+	#routerMac = CharField()
+	#devType = IntegerField()
+	#routerTL = CharField()
+	#routerTLid=CharField()
+	#routerLat = FloatField()
+	#routerLong =FloatField()
+	#rssi = IntegerField()
+	#nodeAddress = CharField()
+	#routerDeviceCount = IntegerField()
+	#deviceAddress=CharField()
+	#tagType=CharField()
+	#version = TextField()
+	#MRAPFrameCount=IntegerField()
+	#routerMajor=IntegerField()
+	#routerMinor=IntegerField()
+	data = TextField()
 
 class TagData():
 	def __init__(self,msg):
 		db.connect()
 		db.create_tables([Tag],safe = True)
 
-		timestampUTC = str(json.loads(msg)["timestampUTC"])
-		routerMac = str(json.loads(msg)["router_mac"])
-		devType = int(json.loads(msg)["dev_type"])
-		routerTL = str(json.loads(msg)["router_tl"])
-		routerTLid = str(json.loads(msg)["router_tlid"])
-		routerLat= float(json.loads(msg)["router_lat"])
-		routerLong= float(json.loads(msg)["router_long"])
-		nodeAddress = str(json.loads(msg)["nodeAddr"])
-		routerDeviceCount=int(json.loads(msg)["router_deviceCount"])
-		deviceAddress= str(json.loads(msg)["deviceAddr"])
-		rssi=int(json.loads(msg)["rssi"])
-		tagType = str(json.loads(msg)["tagType"])
-		version = str(json.loads(msg)["version"])
-		MRAPFrameCount= int(json.loads(msg)["MrapFrameCount"])
-		routerMajor=int(json.loads(msg)["router_major"])
-		routerMinor=int(json.loads(msg)["router_minor"])
+		#timestampUTC = str(json.loads(msg)["timestampUTC"])
+		#routerMac = str(json.loads(msg)["router_mac"])
+		#devType = int(json.loads(msg)["dev_type"])
+		#routerTL = str(json.loads(msg)["router_tl"])
+		#routerTLid = str(json.loads(msg)["router_tlid"])
+		#routerLat= float(json.loads(msg)["router_lat"])
+		#routerLong= float(json.loads(msg)["router_long"])
+		#nodeAddress = str(json.loads(msg)["nodeAddr"])
+		#routerDeviceCount=int(json.loads(msg)["router_deviceCount"])
+		#deviceAddress= str(json.loads(msg)["deviceAddr"])
+		#rssi=int(json.loads(msg)["rssi"])
+		#tagType = str(json.loads(msg)["tagType"])
+		#version = str(json.loads(msg)["version"])
+		#MRAPFrameCount= int(json.loads(msg)["MrapFrameCount"])
+		#routerMajor=int(json.loads(msg)["router_major"])
+		#routerMinor=int(json.loads(msg)["router_minor"])
 
 
-		Tag.get_or_create(
-		timestampUTC=timestampUTC,
-		routerMac = routerMac,
-		devType=devType,
-		routerTL=routerTL,
-		routerTLid=routerTLid,
-		routerLat=routerLat,
-		routerLong=routerLong,
-		nodeAddress=nodeAddress,
-		routerDeviceCount=routerDeviceCount,
-		deviceAddress=deviceAddress,
-		rssi=rssi,
-		tagType=tagType,
-		version=version,
-		MRAPFrameCount=MRAPFrameCount,
-		routerMajor=routerMajor,
-		routerMinor=routerMinor,
-		data=msg)
+		#Tag.get_or_create(
+		#timestampUTC=timestampUTC,
+		#routerMac = routerMac,
+		#devType=devType,
+		#routerTL=routerTL,
+		#routerTLid=routerTLid,
+		#routerLat=routerLat,
+		#routerLong=routerLong,
+		#nodeAddress=nodeAddress,
+		#routerDeviceCount=routerDeviceCount,
+		#deviceAddress=deviceAddress,
+		#rssi=rssi,
+		#tagType=tagType,
+		#version=version,
+		#MRAPFrameCount=MRAPFrameCount,
+		#routerMajor=routerMajor,
+		#routerMinor=routerMinor,
+		#data=msg)
+
+		Tag.get_or_create(data=msg)
 
 		db.close()
 
+	def get_tag(self):
+		db.connect()
+		query= Tag.get(Tag.id ==1).data
+		query2= json.loads(query)
+		print (query2["nodeAddr"])
+
+		db.close()
 
 
 class environmentSensor (BaseModel):

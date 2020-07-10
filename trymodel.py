@@ -59,4 +59,5 @@ smartmoitureprobe_Data_msg = {
 msg =json.dumps(environmentsensor_data_msg)
 #msg1 =json.dumps(smartmoitureprobe_Data_msg)
 data = model.TagData(msg)
+data.get_tag()
 #data1= model.smartMoistureProbeData(msg1)
